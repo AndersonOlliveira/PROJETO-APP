@@ -1,0 +1,59 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    restart: unless-stopped
+    container_name: projetoa-app
+    volumes:
+      - ./app:/var/www
+    working_dir: /var/www
+    depends_on:
+      - mysql
+      - redis
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    container_name: projetoa-nginx
+    ports:
+      - "9001:80"
+    volumes:
+      - ./app:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+  mysql:
+    image: mysql:8
+    restart: unless-stopped
+    container_name: projetoa-mysql
+    environment:
+      MYSQL_DATABASE: vendas
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3300:3306"
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    container_name: projetoa-redis
+    ports:
+      - "6379:6379"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    container_name: projetoa-phpmyadmin
+    ports:
+      - "8082:80"
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: root
+    depends_on:
+      - mysql
+
+volumes:
+  mysql-data:

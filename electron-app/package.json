@@ -1,0 +1,21 @@
+{
+  "name": "pdv-electron",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.seuapp.pdv",
+    "productName": "PDV App",
+    "win": {
+      "target": "nsis",
+      "icon": "build/favicon.ico"
+    }
+  },
+  "devDependencies": {
+    "electron": "^28.1.0",
+    "electron-builder": "^26.0.12"
+  }
+}
